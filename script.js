@@ -35,18 +35,25 @@ boxB.frictionStatic = 1;
 boxA.frictionStatic = 1;
 ground.frictionStatic = 1;
 wall.frictionStatic = 1;
-wall.restitution = 1;
 ground.restitution = 0;
-Body.setVelocity(boxB, {x:-2, y:0})
-Body.setMass(boxB, 10)
-Body.setInertia(boxB, Infinity)
+Body.setVelocity(boxB, {x:-3, y:0})
 var count = 0;
+Body.setMass(boxA,1);
+Body.setMass(boxB,1);
 Matter.Events.on(engine, 'beforeTick', function() {
+        var boxav = boxA.velocity;
+        var boxbv = boxB.velocity;
         var collisionTwoBoxes = Matter.SAT.collides(boxA, boxB);
         var collisionBoxWall = Matter.SAT.collides(boxA,wall);
-        
-        if(collisionBoxWall.collided || collisionTwoBoxes.collided){count++;document.getElementById("count").innerHTML = count;}
-
+        if(collisionBoxWall.collided){
+          Body.setVelocity(boxA, {x:boxav.x * -1, y:0});
+          count++;document.getElementById("count").innerHTML = count;
+        }
+        if(collisionTwoBoxes.collided){
+          Body.setVelocity(boxA, {x:((boxA.mass*boxav.x - boxB.mass*boxav.x + 2*boxB.mass*boxbv.x)/(boxA.mass+boxB.mass)),y:0})
+          Body.setVelocity(boxB, {x:((boxB.mass*boxbv.x - boxA.mass*boxbv.x + 2*boxA.mass*boxav.x)/(boxA.mass+boxB.mass)),y:0})
+          count++;document.getElementById("count").innerHTML = count;
+        }
 });
 // add all of the bodies to the world
 World.add(engine.world, [boxA, boxB, ground, wall]);

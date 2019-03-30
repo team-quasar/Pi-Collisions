@@ -35,12 +35,14 @@ boxB.frictionStatic = 1;
 boxA.frictionStatic = 1;
 ground.frictionStatic = 1;
 wall.frictionStatic = 1;
-
-
-
-ground.restitution = 0;
+ground.restitution = 1;
 Body.setVelocity(boxB, {x:-3, y:0})
-Body.setMass(boxB,100)
+var count = 0;
+Matter.Events.on(engine, 'beforeTick', function() {
+        var collisionTwoBoxes = Matter.SAT.collides(boxA, boxB);
+        var collisionBoxWall = Matter.SAT.collides(boxA,wall);
+        if(collisionBoxWall.collided || collisionTwoBoxes.collided){count++;document.getElementById("count").innerHTML = count;}
+});
 // add all of the bodies to the world
 World.add(engine.world, [boxA, boxB, ground, wall]);
 

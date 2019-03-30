@@ -16,8 +16,8 @@ var render = Render.create({
 });
 
 // create two boxes and a ground
-var boxA = Bodies.rectangle(400, 550, 80, 80);
-var boxB = Bodies.rectangle(550, 550, 80, 80);
+var boxA = Bodies.rectangle(400, 550, 80, 80, {inertia: Infinity, restitution: 1});
+var boxB = Bodies.rectangle(550, 550, 80, 80, {inertia: Infinity, restitution: 1});
 
 
 var ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
@@ -31,16 +31,13 @@ boxB.frictionAir = 0;
 boxA.frictionAir = 0;
 ground.frictionAir = 0;
 wall.frictionAir = 0;
-boxB.frictionStatic = 0;
-boxA.frictionStatic = 0;
-ground.frictionStatic = 0;
-wall.frictionStatic = 0;
+boxB.frictionStatic = 1;
+boxA.frictionStatic = 1;
+ground.frictionStatic = 1;
+wall.frictionStatic = 1;
 
-Body.setMass(boxA, 1)
-Body.setMass(boxB, 1)
-boxA.restitution = 1;
-boxB.restitution = 1;
-wall.restitution = 1;
+
+
 ground.restitution = 1;
 Body.setVelocity(boxB, {x:-3, y:0})
 

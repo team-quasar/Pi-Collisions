@@ -16,8 +16,8 @@ var render = Render.create({
 });
 
 // create two boxes and a ground
-var boxA = Bodies.rectangle(400, 550, 80, 80, {inertia: Infinity, restitution: 1});
-var boxB = Bodies.rectangle(550, 550, 80, 80, {inertia: Infinity, restitution: 1});
+var boxA = Bodies.rectangle(400, 550, 80, 80, {inertia: 0.99, restitution: 1});
+var boxB = Bodies.rectangle(550, 550, 80, 80, {inertia: 0.99, restitution: 1});
 
 
 var ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
@@ -35,13 +35,25 @@ boxB.frictionStatic = 1;
 boxA.frictionStatic = 1;
 ground.frictionStatic = 1;
 wall.frictionStatic = 1;
-ground.restitution = 1;
+ground.restitution = 0;
 Body.setVelocity(boxB, {x:-3, y:0})
 var count = 0;
+Body.setMass(boxA,1);
+Body.setMass(boxB,1);
 Matter.Events.on(engine, 'beforeTick', function() {
+        var boxav = boxA.velocity;
+        var boxbv = boxB.velocity;
         var collisionTwoBoxes = Matter.SAT.collides(boxA, boxB);
         var collisionBoxWall = Matter.SAT.collides(boxA,wall);
-        if(collisionBoxWall.collided || collisionTwoBoxes.collided){count++;document.getElementById("count").innerHTML = count;}
+        if(collisionBoxWall.collided){
+          Body.setVelocity(boxA, {x:boxav.x * -1, y:0});
+          count++;document.getElementById("count").innerHTML = count;
+        }
+        if(collisionTwoBoxes.collided){
+          Body.setVelocity(boxA, {x:((boxA.mass*boxav.x - boxB.mass*boxav.x + 2*boxB.mass*boxbv.x)/(boxA.mass+boxB.mass)),y:0})
+          Body.setVelocity(boxB, {x:((boxB.mass*boxbv.x - boxA.mass*boxbv.x + 2*boxA.mass*boxav.x)/(boxA.mass+boxB.mass)),y:0})
+          count++;document.getElementById("count").innerHTML = count;
+        }
 });
 // add all of the bodies to the world
 World.add(engine.world, [boxA, boxB, ground, wall]);

@@ -16,13 +16,13 @@ var render = Render.create({
 });
 
 // create two boxes and a ground
-var boxA = Bodies.rectangle(400, 550, 80, 80, {inertia: Infinity, restitution: 1});
-var boxB = Bodies.rectangle(550, 550, 80, 80, {inertia: Infinity, restitution: 1});
+var boxA = Bodies.rectangle(400, 549.9, 80, 80, {inertia: Infinity, restitution: 0.99});
+var boxB = Bodies.rectangle(550, 549.9, 80, 80, {inertia: Infinity, restitution: 0.99});
 
 
 var ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
 
-var wall  = Bodies.rectangle(50, 200, 60, 810, { isStatic: true });
+var wall  = Bodies.rectangle(50, 200, 60, 810, {inertia: Infinity, isStatic: true });
 boxA.friction = 0;
 boxB.friction = 0;
 ground.friction = 0;
@@ -38,9 +38,9 @@ wall.frictionStatic = 1;
 
 
 
-ground.restitution = 1;
+ground.restitution = 0;
 Body.setVelocity(boxB, {x:-3, y:0})
-
+Body.setMass(boxB,100)
 // add all of the bodies to the world
 World.add(engine.world, [boxA, boxB, ground, wall]);
 
